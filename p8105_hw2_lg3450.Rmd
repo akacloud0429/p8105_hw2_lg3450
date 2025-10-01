@@ -5,18 +5,18 @@ output: github_document
 ---
 
 # Problem1
-clean the data in pols-month.csv
+first, clean the data in pols-month.csv
 ```{r message=FALSE}
 library(tidyverse)
 ```
-import data
 ```{r}
 pols_month_df = 
+  # import the data
   read_csv("../fivethirtyeight_datasets/pols-month.csv") |>
-  #break up MON into YEAR, MONTH, DAY
+  # break up MON into YEAR, MONTH, DAY
   separate(
     mon, into = c("year", "month", "day"), sep = "-") |>
-  #replace month number with month name
+  # replace month number with month name
   mutate(
     month = case_match(
       month, 
@@ -33,14 +33,16 @@ pols_month_df =
       "11" ~ "November", 
       "12" ~ "December"
     )) |>
-  #create a president variable taking values gop and dem
+  # create a president variable taking values gop and dem
   mutate(president = case_when(
     prez_gop == 1 ~ "gop",
     prez_dem == 1 ~ "dem"
   )) |>
-  #remove prez_dem, prez_gop, day
+  # remove prez_dem, prez_gop, day
   select(-prez_dem, -prez_gop, -day)
-
 View(pols_month_df)
 ```
+
+
+Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
 
