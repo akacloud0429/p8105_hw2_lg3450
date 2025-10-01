@@ -60,8 +60,26 @@ snp_df =
       date)) |>
   # separate year, month and day
   separate(date, into = c("year", "month", "day"), sep = "-") |>
+  # replace month number with month name
+  mutate(
+    month = case_match(
+      month, 
+      "01" ~ "Jan",
+      "02" ~ "Feb",
+      "03" ~ "Mar",
+      "04" ~ "Apr",
+      "05" ~ "May",
+      "06" ~ "Jun",
+      "07" ~ "Jul",
+      "08" ~ "Aug",
+      "09" ~ "Sep",
+      "10" ~ "Oct",
+      "11" ~ "Nov", 
+      "12" ~ "Dec"
+    )) |>
   # prioritize year and month
   relocate(year, month)
+
 View(snp_df)
 ```
 third, tidy the unemployment data
@@ -80,8 +98,8 @@ View(unemployment_df)
 Now join the datasets by merging snp into pols, and merging unemployment into the result.
 ```{r}
 
-```
 
+```
 
 
 
