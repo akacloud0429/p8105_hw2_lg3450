@@ -37,10 +37,9 @@ pols_month_df =
   mutate(president = case_when(
     prez_gop == 1 ~ "gop",
     prez_dem == 1 ~ "dem"
-  ))
-#and remove prez_dem and prez_gop; 
-#and remove the day variable.
-           
+  )) |>
+  #remove prez_dem, prez_gop, day
+  select(-prez_dem, -prez_gop, -day)
 
 View(pols_month_df)
 ```
