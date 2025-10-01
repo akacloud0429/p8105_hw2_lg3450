@@ -59,7 +59,9 @@ snp_df =
       date - years(100), 
       date)) |>
   # separate year, month and day
-  separate(date, into = c("year", "month", "day"), sep = "-")
+  separate(date, into = c("year", "month", "day"), sep = "-") |>
+  # prioritize year and month
+  relocate(year, month)
 View(snp_df)
 ```
 
