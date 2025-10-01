@@ -110,7 +110,37 @@ result_df =
 View(pols_snp_df)
 View(result_df)
 ```
-Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+#!!!Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+
+
+# Problem2 
+Read and clean the Mr. Trash Wheel sheet:
+specify the sheet in the Excel file 
+and to omit non-data entries (rows with notes / figures; columns containing notes) using arguments in read_excel
+use reasonable variable names
+omit rows that do not include dumpster-specific data
+round the number of sports balls to the nearest integer and converts the result to an integer variable (using as.integer)
+
+first download the required library
+```{r}
+library(readxl)
+```
+then import the data from excel file and clean variable names
+```{r}
+trash_df = 
+  read_excel("../202509 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N710") |>
+  janitor::clean_names()
+
+View(trash_df)
+```
+
+
+
+
+
+
+
+
 
 
 
