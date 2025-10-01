@@ -77,7 +77,10 @@ unemployment_df =
   )
 View(unemployment_df)
 ```
+Now join the datasets by merging snp into pols, and merging unemployment into the result.
+```{r}
 
+```
 
 
 
