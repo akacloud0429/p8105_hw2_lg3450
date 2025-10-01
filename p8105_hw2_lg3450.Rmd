@@ -42,7 +42,24 @@ pols_month_df =
   select(-prez_dem, -prez_gop, -day)
 View(pols_month_df)
 ```
-
-
-Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
+second, clean the data in snp.csv
+```{r}
+library(lubridate)
+```
+```{r}
+# import the data
+snp_df = 
+  read_csv("../fivethirtyeight_datasets/snp.csv") |>
+  # first convert date format into same format yyyy-mm-dd 
+  mutate(
+    date = coalesce(ymd(date), mdy(date)),
+    # correction of years
+    date = if_else(
+      year(date) > 2025, 
+      date - years(100), 
+      date)) |>
+  # separate year, month and day
+  separate(date, into = c("year", "month", "day"), sep = "-")
+View(snp_df)
+```
 
