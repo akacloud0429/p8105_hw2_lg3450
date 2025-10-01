@@ -77,6 +77,8 @@ snp_df =
       "11" ~ "Nov", 
       "12" ~ "Dec"
     )) |>
+  # remove the day variable
+  select(-day) |>
   # prioritize year and month
   relocate(year, month)
 
@@ -92,18 +94,23 @@ unemployment_df =
     cols = Jan:Dec,
     names_to = "month",
     values_to = "unemployment_rate"
-  )
+  ) |>
+  # rename column name
+  rename(year = Year)
 View(unemployment_df)
 ```
 Now join the datasets by merging snp into pols, and merging unemployment into the result.
 ```{r}
+pols_snp_df = 
+  left_join(pols_month_df, snp_df, by = c("year", "month")) |>
+  mutate(year = as.integer(year))
+result_df = 
+  left_join(pols_snp_df, unemployment_df, by = c("year", "month"))
 
-
+View(pols_snp_df)
+View(result_df)
 ```
-
-
-
-
+Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
 
 
 
