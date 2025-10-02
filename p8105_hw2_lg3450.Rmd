@@ -109,55 +109,93 @@ library(readxl)
 ```
 then import the data from excel file
 ```{r}
-trash_df = 
+mr_df = 
   # specify the sheet, omit non-data entries
-  read_excel("../202509 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N710") |>
-  # clean variable names
+  read_excel("../202509 Trash Wheel Collection Data.xlsx", 
+             sheet = "Mr. Trash Wheel", 
+             range = "A2:N710") |>
   janitor::clean_names() |>
   # omit rows that do not include dumpster-specific data
   drop_na(dumpster) |>
   # round and convert # of sports balls to nearest integer
-  mutate(sports_balls = as.integer(round(sports_balls))) |>
+  mutate(
+  date  = as.Date(date),
+  year  = year(date),
+  month = month(date),
+  month = month.name[month],
+  sports_balls = as.integer(round(sports_balls)),
   # keep track of wheel type
-  mutate(wheel = "mr")
-
-View(trash_df)
+  wheel = "Mr. Trash Wheel")
+View(mr_df)
 ```
-
 second clean the ` Professor Trash Wheel` dataset
 ```{r}
 prof_df = 
   # specify the sheet, omit non-data entries
-  read_excel("../202509 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", skip = 1) |>
+  read_excel("../202509 Trash Wheel Collection Data.xlsx", 
+             sheet = "Professor Trash Wheel", 
+             skip = 1) |>
   # clean variable names
   janitor::clean_names() |>
   # omit rows that do not include dumpster-specific data
   drop_na(dumpster) |>
   # keep track of wheel type
-  mutate(wheel = "professor")
+  mutate(
+    date  = as.Date(date),
+    year  = year(date),
+    month = month(date),
+    month = month.name[month],
+    wheel = "Professor Trash Wheel")
   
 View(prof_df)
 ```
-
 third clean the `Gwynnda` dataset
 ```{r}
 gwynnda_df = 
   # specify the sheet, omit non-data entries
-  read_excel("../202509 Trash Wheel Collection Data.xlsx", sheet = "Gwynns Falls Trash Wheel", skip = 1) |>
+  read_excel("../202509 Trash Wheel Collection Data.xlsx", 
+             sheet = "Gwynns Falls Trash Wheel", 
+             skip = 1) |>
   # clean variable names
   janitor::clean_names() |>
   # omit rows that do not include dumpster-specific data
   drop_na(dumpster) |>
   # keep track of wheel type
-  mutate(wheel = "gwynnda")
-  
+  mutate(
+    date  = as.Date(date),
+    year  = year(date),
+    month = month(date),
+    month = month.name[month],
+    wheel = "Gwynns Falls Trash Wheel"
+  )
 View(gwynnda_df)
 ```
-
 combine 3 datasets
 ```{r}
+trash_all =
+  bind_rows(mr_df, prof_df, gwynnda_df) |>
+  relocate(dumpster, wheel, date, year, month)
 
+View(trash_all)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Problem3
 Create a single, well-organized dataset with all the information contained in these data files. 
