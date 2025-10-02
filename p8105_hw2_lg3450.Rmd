@@ -204,7 +204,7 @@ What was the total number of cigarette butts collected by Gwynnda in June of 202
 
 * Key variables include `wheel`, `dumpster`, `date`, `year`, `month`, `weight_tons`, `volume_cubic_yards`, and item counts, e.g., `plastic_bottles`. 
 
-* For the available data, Professor Trash Wheel collected `r round(prof_total_weight_tons, 0)` tons in total, and Gwynnda collected `r round(gwyn_cigs_jun2022, 0)` cigarette butts in June 2022.
+* For the available data, Professor Trash Wheel collected `r round(prof_total_weight_tons, 2)` tons in total, and Gwynnda collected `r round(gwyn_cigs_jun2022, 2)` cigarette butts in June 2022.
 
 
 # Problem3
