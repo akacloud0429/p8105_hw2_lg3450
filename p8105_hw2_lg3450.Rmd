@@ -323,4 +323,4 @@ drops_tbl =
   select(zip, borough, neighborhood, zori_2020, zori_2021, drop)
 drops_tbl
 ```
-The table shows the 10 ZIPs with the largest ZORI declines from Jan-2020 to Jan-2021, consistent with pandemic demand shifts in denser areas. 
+The table shows that the 10 ZIP codes with the largest rent drops from Jan 2020 to Jan 2021 are all in Manhattan. For example, ZIP 10007 (Lower Manhattan) fell from about 6,334 in Jan 2020 to 5,422 in Jan 2021, a drop of over 900. The result is consistent with pandemic demand shifts in denser areas. 
