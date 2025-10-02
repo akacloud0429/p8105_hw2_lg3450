@@ -179,22 +179,32 @@ trash_all =
 View(trash_all)
 ```
 
+```{r}
+# Total weight (tons) for Professor Trash Wheel
+prof_total_weight_tons =
+  trash_all |>
+  dplyr::filter(wheel == "Professor Trash Wheel") |>
+  dplyr::summarise(total = sum(weight_tons, na.rm = TRUE)) |>
+  dplyr::pull(total)
 
+# Total cigarette butts collected by Gwynnda in June 2022
+gwyn_cigs_jun2022 =
+  trash_all |>
+  dplyr::filter(wheel == "Gwynns Falls Trash Wheel",
+                year == 2022,
+                month == "June") |>
+  dplyr::summarise(total = sum(cigarette_butts, na.rm = TRUE)) |>
+  dplyr::pull(total)
+```
 
+**Q: For available data, what was the total weight of trash collected by Professor Trash Wheel? 
+What was the total number of cigarette butts collected by Gwynnda in June of 2022?**
 
+* The cleaned and combined Trash Wheel dataset contains `r nrow(trash_all)` observations and `r ncol(trash_all)` variables; each row represents a dumpster load. 
 
+* Key variables include `wheel`, `dumpster`, `date`, `year`, `month`, `weight_tons`, `volume_cubic_yards`, and item counts, e.g., `plastic_bottles`. 
 
-
-
-
-
-
-
-
-
-
-
-
+* For the available data, Professor Trash Wheel collected `r round(prof_total_weight_tons, 0)` tons in total, and Gwynnda collected `r round(gwyn_cigs_jun2022, 0)` cigarette butts in June 2022.
 
 
 # Problem3
@@ -213,19 +223,13 @@ zip_codes_df =
   # clean variable names
   janitor::clean_names()
 
+
 zip_info_df = 
   read_csv("../zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv") |>
   # clean variable names
   janitor::clean_names()
 
-View(zip_codes_df)
-View(zip_info_df)
 ```
-
-
-
-
-
 
 
 
