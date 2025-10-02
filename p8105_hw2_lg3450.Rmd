@@ -9,38 +9,27 @@ first, clean the data in pols-month.csv
 ```{r message=FALSE}
 library(tidyverse)
 ```
+
 ```{r}
-pols_month_df = 
+pols_df = 
   # import the data
-  read_csv("../fivethirtyeight_datasets/pols-month.csv") |>
-  # break up MON into YEAR, MONTH, DAY
-  separate(
-    mon, into = c("year", "month", "day"), sep = "-") |>
-  # replace month number with month name
-  mutate(
-    month = case_match(
-      month, 
-      "01" ~ "Jan",
-      "02" ~ "Feb",
-      "03" ~ "Mar",
-      "04" ~ "Apr",
-      "05" ~ "May",
-      "06" ~ "Jun",
-      "07" ~ "Jul",
-      "08" ~ "Aug",
-      "09" ~ "Sep",
-      "10" ~ "Oct",
-      "11" ~ "Nov", 
-      "12" ~ "Dec"
-    )) |>
+  read_csv("../fivethirtyeight_datasets/pols-month.csv", na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  # split "mon" into year/month/day in integers
+  separate(mon, into = c("year", "month", "day"), sep = "-", convert = TRUE) |>
+  # replace month number with month *name*
+  mutate(month = month.name[month]) |>
   # create a president variable taking values gop and dem
   mutate(president = case_when(
     prez_gop == 1 ~ "gop",
     prez_dem == 1 ~ "dem"
   )) |>
   # remove prez_dem, prez_gop, day
-  select(-prez_dem, -prez_gop, -day)
-View(pols_month_df)
+  select(-prez_dem, -prez_gop, -day) |>
+  # keep year and month leading
+  relocate(year, month)
+
+View(pols_df)
 ```
 second, clean the data in snp.csv
 ```{r}
@@ -49,41 +38,37 @@ library(lubridate)
 ```{r}
 # import the data
 snp_df = 
-  read_csv("../fivethirtyeight_datasets/snp.csv") |>
+  read_csv("../fivethirtyeight_datasets/snp.csv", na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
   # first convert date format into same format yyyy-mm-dd 
   mutate(
-    date = coalesce(ymd(date), mdy(date)),
-    # correction of years
-    date = if_else(
-      year(date) > 2025, 
-      date - years(100), 
-      date)) |>
-  # separate year, month and day
-  separate(date, into = c("year", "month", "day"), sep = "-") |>
-  # replace month number with month name
-  mutate(
-    month = case_match(
-      month, 
-      "01" ~ "Jan",
-      "02" ~ "Feb",
-      "03" ~ "Mar",
-      "04" ~ "Apr",
-      "05" ~ "May",
-      "06" ~ "Jun",
-      "07" ~ "Jul",
-      "08" ~ "Aug",
-      "09" ~ "Sep",
-      "10" ~ "Oct",
-      "11" ~ "Nov", 
-      "12" ~ "Dec"
-    )) |>
-  # remove the day variable
-  select(-day) |>
+    date = coalesce(lubridate::ymd(date), lubridate::mdy(date)),
+    # adjust two-digit years that landed in the 2000s
+    date = if_else(lubridate::year(date) > 2025, date - lubridate::years(100), date),
+    year = lubridate::year(date),
+    month_num = lubridate::month(date),
+    month = month.name[month_num]
+  ) |>  
+  arrange(year, month_num, date) |>
+  group_by(year, month) |>
+  summarise(close = dplyr::last(close), .groups = "drop") |>
   # prioritize year and month
   relocate(year, month)
-
 View(snp_df)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
 third, tidy the unemployment data
 ```{r}
 # import the unemployment data
@@ -102,7 +87,7 @@ View(unemployment_df)
 Now join the datasets by merging snp into pols, and merging unemployment into the result.
 ```{r}
 pols_snp_df = 
-  left_join(pols_month_df, snp_df, by = c("year", "month")) |>
+  left_join(pols_df, snp_df, by = c("year", "month")) |>
   mutate(year = as.integer(year))
 result_df = 
   left_join(pols_snp_df, unemployment_df, by = c("year", "month"))
@@ -172,8 +157,29 @@ combine 3 datasets
 ```
 
 # Problem3
-Create a single, well-organized dataset with all the information contained in these data files. To that end: import, clean, tidy, and otherwise wrangle each of these datasets; check for completeness and correctness across datasets (e.g. by viewing individual datasets and monitoring warning messages); merge to create a single, final dataset; and organize this so that variables and observations are in meaningful orders.
+Create a single, well-organized dataset with all the information contained in these data files. 
 
+To that end: 
+import, clean, tidy, and otherwise wrangle each of these datasets; 
+check for completeness and correctness across datasets (e.g. by viewing individual datasets and monitoring warning messages); 
+merge to create a single, final dataset; 
+and organize this so that variables and observations are in meaningful orders.
+
+first we import both datasets
+```{r}
+zip_codes_df = 
+  read_csv("../zillow_data/Zip Codes.csv") |>
+  # clean variable names
+  janitor::clean_names()
+
+zip_info_df = 
+  read_csv("../zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv") |>
+  # clean variable names
+  janitor::clean_names()
+
+View(zip_codes_df)
+View(zip_info_df)
+```
 
 
 
