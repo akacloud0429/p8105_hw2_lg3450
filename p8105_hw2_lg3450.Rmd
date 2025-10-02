@@ -268,8 +268,13 @@ View(zip_info_df)
 ```
 then we join two datasets:
 ```{r}
+zip_label =
+  zip_codes_df |>
+  arrange(borough, neighborhood) |>
+  distinct(zip, .keep_all = TRUE)
+
 zori_final =
-  left_join(zip_info_df, zip_codes_df, by = "zip") |>
+  left_join(zip_info_df, zip_label, by = "zip") |>
   arrange(zip, year, match(month, month.name)) |>
   relocate(zip, borough, neighborhood, year, month, zori)
 ```
